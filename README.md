@@ -1,0 +1,2 @@
+fuse-jboss-bitmoney-demo
+========================
