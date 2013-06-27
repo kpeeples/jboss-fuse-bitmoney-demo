@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Configures the Camel Context-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+  <!-- This creates an embedded ActiveMQ Broker -->
+   <broker xmlns="http://activemq.apache.org/schema/core" useJmx="false" persistent="false">
+          <transportConnectors>
+       		   <transportConnector name="mqtt" uri="mqtt://0.0.0.0:1884"/>
+       		   <transportConnector name="openwire" uri="tcp://0.0.0.0:61002"/>
+        </transportConnectors>
+    </broker>
+   
+  <bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    <property name="url" value="jdbc:mysql://localhost/bitmoneydemo?relaxAutoCommit=true"/>
+    <property name="username" value="admin"/>
+    <property name="password" value="password"/>
+  </bean> 
+
+
+ <!-- 
+	  <bean id="activemq" 
+	      class="org.apache.activemq.camel.component.ActiveMQComponent">
+	    <property name="brokerURL" value="tcp://${system.ip.port}" />
+	  </bean>
+ 
+    <bean id="na" 
+      class="org.apache.activemq.camel.component.ActiveMQComponent">
+   		 <property name="brokerURL" value="tcp://${na.ip}:${na.port}" />
+  	</bean>
+  	
+  	<bean id="emea" 
+      class="org.apache.activemq.camel.component.ActiveMQComponent">
+   		 <property name="brokerURL" value="tcp://${emea.ip}:${emea.port}" />
+  	</bean>
+  
+  	
+  	<bean id="apac" 
+      class="org.apache.activemq.camel.component.ActiveMQComponent">
+   		 <property name="brokerURL" value="tcp://${apac.ip}:${apac.port}" />
+  	</bean>
+  -->
+  	<bean id="btListener" class="org.zeroglitch.mqtt.listener.BTListener"></bean>
+	
+	
+	<camelContext id="camel-server" xmlns="http://camel.apache.org/schema/spring">
+    <route>
+        <from uri="mqtt:junk?subscribeTopicName=BITCOIN"/>
+  
+        <choice>
+<!--         
+            <when>
+                <xpath>/BitmoneyExchange/Transfer[Region= 'apac']</xpath>
+                <log marker="1" message="Sending to west region"/>
+                <to uri="mqtt:apac?host=tcp://0.0.0.0:1884?publishTopicName=BITCOIN"/>
+            </when>
+            
+            <when>
+                <xpath>/BitmoneyExchange/Transfer[Region= 'na']</xpath>
+                <log marker="1" message="Sending to west region"/>
+                <to uri="mqtt:na?host=tcp://0.0.0.0:1885?publishTopicName=BITCOIN"/>
+            </when>
+            <when>
+                <xpath>/BitmoneyExchange/Transfer[Region= 'emea']</xpath>
+                <log marker="1" message="Sending to west region"/>
+                <to uri="mqtt:emea?host=tcp://0.0.0.0:1886?publishTopicName=BITCOIN"/>
+            </when>
+             -->
+            <when>
+                <xpath>/BitmoneyExchange/Transfer[Region= 'ltma']</xpath>
+                <log marker="1" message="Sending to west region"/>
+                <to uri="mqtt:emea?host=tcp://0.0.0.0:1883?publishTopicName=BITCOIN"/>
+            </when>
+           
+            <otherwise> 
+                <log marker="1" message="sending to default region"/>
+                <bean beanType="org.zeroglitch.mqtt.listener.BTListener" method="onMessage" ref="btListener" id="blhablah"/>
+            </otherwise>
+        </choice>
+           <!--    
+         <log marker="1" message="sending to default region"/>
+                <bean beanType="org.zeroglitch.mqtt.listener.BTListener" method="onMessage" ref="btListener" id="blhabalah"/>
+         -->
+    </route>
+</camelContext>
+  <!-- 
+ 
+
+	<bean id="mqttlistner" class="org.zeroglitch.mqtt.listener.MqttListener"/>
+ -->
+
+</beans>

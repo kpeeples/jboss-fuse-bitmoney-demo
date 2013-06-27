@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello"> bitmoney!</string>
+    <string name="app_name">BitMoney</string>
+    
+    <string-array name="regions_array">
+        <item>East</item>
+        <item>West</item>
+    </string-array>
+
+</resources>
