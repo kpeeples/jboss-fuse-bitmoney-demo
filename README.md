@@ -1,7 +1,8 @@
 fuse-jboss-bitmoney-demo
 ========================
 
-# Welcome to the fuse-jboss-bitmoney-demo wiki!
+#  Jboss Fuse, Camel, Android, Mqtt
+This demonstration will show how to use Jboss Fuse and Mqtt to communicate from android to a fuse instance.  Messages are routed between fuse instances using mqtt topics, and beans, utlizing spring and camel.
 
 ## Required Software:
 1.  jboss fuse version 6.0.0 http://www.jboss.org/products/fuse
