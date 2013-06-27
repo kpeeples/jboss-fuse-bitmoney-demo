@@ -1,4 +1,4 @@
-fuse-jboss-bitmoney-demo
+jboss-fuse-bitmoney-demo
 ========================
 
 #  Jboss Fuse, Camel, Android, Mqtt
