@@ -37,6 +37,11 @@ public final class R {
         public static final int textView5=0x7f060006;
         public static final int textView6=0x7f060003;
         public static final int transferButton=0x7f06000d;
+        public static final int transferCost=0x7f060019;
+        public static final int transferDialogInput=0x7f060018;
+        public static final int transferRegion=0x7f060017;
+        public static final int transferRegionSelectText=0x7f060016;
+        public static final int transferText=0x7f06001a;
         public static final int userEditText=0x7f06000f;
         public static final int westText=0x7f060008;
     }
@@ -44,6 +49,7 @@ public final class R {
         public static final int main=0x7f030000;
         public static final int preferences=0x7f030001;
         public static final int prompts=0x7f030002;
+        public static final int transfer_prompt=0x7f030003;
     }
     public static final class string {
         public static final int app_name=0x7f040001;

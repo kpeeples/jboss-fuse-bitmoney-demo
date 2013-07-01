@@ -31,9 +31,13 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,42 +46,52 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MQTTActivity extends Activity implements OnClickListener {
+public class MQTTActivity extends Activity implements OnClickListener, OnItemSelectedListener, OnKeyListener {
+	
+	// Region Information
+	// 
+	//  Bitcoin rate is 1 to 1
+	//  So bitcoin is our default currency
+	//  
+	private final int apacCoinValue = 100;
+	private final int naCoinValue = 200;
+	private final int ltamCoinValue = 300;
+	private final int emeaCoinValue = 150;
+	
+	private int myRegionValue = 0;
+	
 
 	private final String TAG = "MQTTClient";
-
 	EditText addressET = null;
-
 	EditText destinationET = null;
-
 	EditText messageET = null;
-
 	EditText receiveET = null;
-
 	EditText userNameET = null;
-
 	EditText passwordET = null;
 	EditText userText = null;
 
 	Button connectButton = null;
-
 	Button disconnectButton = null;
-
 	Button sendButton = null;
-
 	Button receiveButton = null;
 	Button prefSendButton = null;
+	private Button buyButton;
+	private Button sellButton;
+	private Button transferButton;
+	
+	private TextView east;
+	private TextView west;
+	private TextView balance;
+	
+	private GridView gridView;
+	private ArrayAdapter<String> adapter;
 
 	private ProgressDialog progressDialog = null;
 
 	String sAddress = null;
-
 	String sUserName = null;
-
 	String sPassword = null;
-
 	String sDestination = null;
-
 	String sMessage = null;
 
 	MQTT mqtt = null;
@@ -91,46 +105,28 @@ public class MQTTActivity extends Activity implements OnClickListener {
 	String user = "wtjamiegmail.com";
 	String callback = "";
 	String region = "";
-
-	// Temp Messages
-	StringBuffer regMessage = new StringBuffer();
-
-	StringBuffer ratesMessage = new StringBuffer();
-
-	StringBuffer currentMessage = null;
-
-	private TextView east;
-
-	private TextView west;
-
-	private StringBuffer balanceMessage;
-
 	String eastVal = "";
 	String westVal = "";
 	String balanceVal = "";
+	private String result;
+	private String userId;
+	
 
+	// Temp Messages
+	StringBuffer regMessage = new StringBuffer();
+	StringBuffer ratesMessage = new StringBuffer();
+	StringBuffer currentMessage = null;
+	private StringBuffer balanceMessage;
 	private StringBuffer transactionMessage;
-
-	private GridView gridView;
-
-	private TextView balance;
-
-	private ArrayAdapter<String> adapter;
-
-	private Button buyButton;
-
-	private Button sellButton;
-
 	private StringBuffer buyMessage;
 	private StringBuffer sellMessage;
-	private String result;
-
-	private String userId;
-
-	private Button transferButton;
-
 	private StringBuffer transferMessage;
-
+	private String myRegion;
+	private EditText userInput;
+	private Spinner regionSpinner;
+	private TextView valueDisplay;
+	private String transferRegion;
+	
 	void setRegMessages() {
 		regMessage = new StringBuffer();
 		regMessage.append("<BitmoneyExchange>");
@@ -196,10 +192,10 @@ public class MQTTActivity extends Activity implements OnClickListener {
 		transferMessage = new StringBuffer();
 		transferMessage.append("<BitmoneyExchange>");
 		transferMessage.append("<Transfer>");
-		transferMessage.append("<Region>" + "west" + "</Region>");
+		transferMessage.append("<Region>" + transferRegion + "</Region>");
 		transferMessage.append("<Amount>" + result + "</Amount>");
 		transferMessage.append("<UserId>" + userId + "</UserId>");
-		transferMessage.append("<Callback>" + user+ "-buy</Callback>");
+		transferMessage.append("<Callback>" + user+ "-transfer</Callback>");
 		transferMessage.append("</Transfer>");
 		transferMessage.append("</BitmoneyExchange>");
 
@@ -250,6 +246,20 @@ public class MQTTActivity extends Activity implements OnClickListener {
 			spinner.setAdapter(adapter);
 
 		} else {
+			preferences.edit().putString("NA", region).commit();
+
+			myRegion = preferences.getString("region", "NA");
+			
+			if ("NA".equals(myRegion)) {
+				myRegionValue = naCoinValue;
+			} else if ("LTAM".equals(myRegion)) {
+				myRegionValue = ltamCoinValue;
+			} else if ("APAC".equals(myRegion)) {
+				myRegionValue = apacCoinValue;
+			} else if ("EMEA".equals(myRegion)) {
+				myRegionValue = emeaCoinValue;
+			}
+			
 			Log.i(TAG, "rate messages call");
 			createConnection();
 			connect();
@@ -295,9 +305,8 @@ public class MQTTActivity extends Activity implements OnClickListener {
 	public void createConnection() {
 		// Public Queue
 		mqtt = new MQTT();
-		if ("".equals(user))
-			user = userText.getText().toString().trim();
-		
+		if ("".equals(user)) user = userText.getText().toString().trim();   
+		 
 		Log.i(TAG,user + "request" + new java.util.Date().getTime());
 		mqtt.setClientId(user + "request" + new java.util.Date().getTime());
 		//sAddress = "tcp://www.zeroglitch.org:1883";
@@ -356,16 +365,17 @@ public class MQTTActivity extends Activity implements OnClickListener {
 		
 		if (v == buyButton) {
 			Log.i(TAG, "buying");
-			showDialog("Buy");
+			showBuyDialog("Buy");
 		}
 		
 		if (v == sellButton) {
-			showDialog("Sell");
+			showBuyDialog("Sell");
 		}
 		
 		if (v== transferButton) {
-			setTransferMessage();
-			send("BITCOIN", transferMessage.toString(), user + "/rates");
+			showTransferDialog("Sell");
+			//setTransferMessage();
+			//send("BITCOIN", transferMessage.toString(), user + "/rates");
 		}
 
 		if (v == sendButton) {
@@ -379,7 +389,7 @@ public class MQTTActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	public void showDialog(final String action) {
+	public void showBuyDialog(final String action) {
 		Log.i(TAG, "showing it");
 
 		// get prompts.xml view
@@ -432,6 +442,62 @@ public class MQTTActivity extends Activity implements OnClickListener {
 		Log.i(TAG, "Before Show");
 		alertDialog.show(); 
 	}
+	
+	public void showTransferDialog(final String action) {
+		Log.i(TAG, "showing it");
+
+		// get prompts.xml view
+		LayoutInflater li = LayoutInflater.from(this);
+		View promptsView = li.inflate(R.layout.transfer_prompt, null);
+
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		alertDialogBuilder.setView(promptsView);
+
+		userInput = (EditText) promptsView.findViewById(R.id.transferDialogInput);
+		userInput.setOnKeyListener(this);
+		valueDisplay = (TextView)promptsView.findViewById(R.id.transferText);
+	    regionSpinner = (Spinner) promptsView.findViewById(R.id.transferRegion);
+		// Create an ArrayAdapter using the string array and a default
+		// spinner layout
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.regions_array,
+						android.R.layout.simple_spinner_item);
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		regionSpinner.setAdapter(adapter);
+		
+		regionSpinner.setOnItemSelectedListener(this);
+
+		// set dialog message
+		alertDialogBuilder.setCancelable(true).setPositiveButton("OK",
+			  new DialogInterface.OnClickListener() {	    
+
+				public void onClick(DialogInterface dialog,int id) {
+					
+					result = new String(userInput.getText()+"");
+					transferRegion = new String(regionSpinner.getSelectedItem().toString());
+					Log.i(TAG, "the result: " + result);
+					
+					setTransferMessage();
+					send("BITCOIN", transferMessage.toString(), user +  "-transfer");
+				
+			    }
+			  })
+			.setNegativeButton("Cancel",
+			  new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog,int id) {
+				dialog.cancel();
+			    }
+			  });
+
+		// create alert dialog
+		AlertDialog alertDialog = alertDialogBuilder.create();
+
+		// show it
+		Log.i(TAG, "Before Show");
+		alertDialog.show(); 
+	}
+
 
 	// callback used for Future
 	<T> Callback<T> onui(final Callback<T> original) {
@@ -447,8 +513,6 @@ public class MQTTActivity extends Activity implements OnClickListener {
 							Log.i(TAG, "value haha: " + value.getClass() + " orig: "+ original.getClass());
 							Log.i(TAG, "value string: " + value.toString());
 
-							// SharedPreferences preferences =
-							// PreferenceManager.getDefaultSharedPreferences(original.getBaseContext());
 							if (value instanceof org.fusesource.mqtt.client.Message) {
 								Message m = (Message) value;
 
@@ -725,6 +789,80 @@ public class MQTTActivity extends Activity implements OnClickListener {
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		InputSource is = new InputSource(new StringReader(xml));
 		return builder.parse(is);
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {		
+		updateValue(position);
+	}
+
+	private void updateValue(int position) {
+		
+		
+		Log.d(TAG, "valueDisplay " + valueDisplay);
+		Log.d(TAG, "userInput " + userInput);
+		
+		if (userInput == null) return;
+		if (valueDisplay == null) return;
+		
+		String userValue = userInput.getText() + "";
+		String value = regionSpinner.getSelectedItem().toString();
+		//double dValue = Double.parseDouble(valueDisplay.getText()+"");
+		
+		Log.d(TAG, " selected region: " + value);
+		
+		if ("".equals(userValue)) return;
+		double input = Double.parseDouble(userValue);
+		double userRegionValue = 1.0;
+		double selectedRegionValue = 1.0;
+		
+		region = preferences.getString("region", "NA");
+		
+		if ("".equals(region)) {
+			region = "NA";
+		}
+		Log.d(TAG, "USER REGSION: " + region);
+		
+		if ("NA".equalsIgnoreCase(region)) {
+			userRegionValue = naCoinValue;
+		} else if ("LTAM".equalsIgnoreCase(region)) {
+			userRegionValue = ltamCoinValue;
+		} else if ("APAC".equalsIgnoreCase(region)) {
+			userRegionValue = apacCoinValue;
+		} else if ("EMEA".equalsIgnoreCase(region)) {
+			userRegionValue = emeaCoinValue;
+		}
+		
+		if ("NA".equalsIgnoreCase(value)) {
+			selectedRegionValue = naCoinValue;
+		} else if ("LTAM".equalsIgnoreCase(value)) {
+			selectedRegionValue = ltamCoinValue;
+		} else if ("APAC".equalsIgnoreCase(value)) {
+			selectedRegionValue = apacCoinValue;
+		} else if ("EMEA".equalsIgnoreCase(value)) {
+			selectedRegionValue = emeaCoinValue;
+		}
+		
+		double ratio = 0.0;
+		
+		Log.d(TAG, "user: " + userRegionValue + " select: " + selectedRegionValue);
+		
+		ratio = userRegionValue/selectedRegionValue;
+		
+		valueDisplay.setText((ratio * input) + "");
+		
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onKey(View view, int key, KeyEvent event) {
+		updateValue(1);
+		return false;
 	}
 
 }

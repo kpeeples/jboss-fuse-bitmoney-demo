@@ -61,7 +61,7 @@
                 <log marker="1" message="Sending to west region"/>
                 <to uri="mqtt:apac?host=tcp://0.0.0.0:1884?publishTopicName=BITCOIN"/>
             </when>
-<!--             
+            
             <when>
                 <xpath>/BitmoneyExchange/Transfer[Region= 'na']</xpath>
                 <log marker="1" message="Sending to west region"/>
@@ -77,7 +77,7 @@
                 <log marker="1" message="Sending to west region"/>
                 <to uri="mqtt:emea?host=tcp://0.0.0.0:1883?publishTopicName=BITCOIN"/>
             </when>
-         -->   
+    <!--      -->   
             <otherwise> 
                 <log marker="1" message="sending to default region"/>
                 <bean beanType="org.zeroglitch.mqtt.listener.BTListener" method="onMessage" ref="btListener" id="blhablah"/>
