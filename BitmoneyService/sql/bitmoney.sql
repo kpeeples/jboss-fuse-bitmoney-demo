@@ -33,9 +33,15 @@ DROP TABLE IF EXISTS `region`;
 CREATE TABLE `region` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
+  `rate` double DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+insert into region (name, rate) values ('APAC', 555.55);
+insert into region (name, rate) values ('LTAM', 455.55);
+insert into region (name, rate) values ('ENMA', 355.55);
+insert into region (name, rate) values ('NA', 655.55);
 
 --
 -- Dumping data for table `region`
@@ -112,4 +118,6 @@ UNLOCK TABLES;
 
 -- Dump completed on 2013-06-21 16:10:41
 
-create user admin@'%' identified by 'password' with grant option;
+grant all privileges on *.* to 'admin'@'%' identified by 'password' with grant option;
+grant all privileges on *.* to 'admin'@'localhost' identified by 'password' with grant option;                                                                                                                                       
+         

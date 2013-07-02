@@ -120,6 +120,59 @@ public class DataManager {
 		}
 
 	}
+	
+	public ArrayList<Region> getRegionBalances() throws SQLException {
+
+		ApplicationContext context = new ClassPathXmlApplicationContext("datasource.xml");
+
+		DataSource dataSource = (DataSource) context.getBean("myDataSource");
+
+		Region element = new Region();
+		ArrayList<Region> elementList = new ArrayList<Region>();
+
+		Connection con = null;
+		Statement st = null;
+		ResultSet rs = null;
+
+		lgr.info("Create Data source");
+		con = dataSource.getConnection();
+		lgr.info("Create Statement");
+		st = con.createStatement();
+		
+		String sql = ""; 
+		
+
+		sql += " select * from region;";
+		
+		lgr.info("executing:...  " + sql);
+		rs = st.executeQuery(sql);
+
+		lgr.info("display results");
+		while (rs.next()) {
+			element = new Region();
+			element.setId(rs.getInt(1));
+			element.setName(rs.getString(2));
+			element.setRate(rs.getDouble(3));
+			lgr.info(element.toString());
+			
+			elementList.add(element);	
+		}
+		
+		lgr.info("finished display");
+
+		if (rs != null) {
+			rs.close();
+		}
+		if (st != null) {
+			st.close();
+		}
+		if (con != null) {
+			con.close();
+		}
+
+		return elementList;
+
+	}
 
 	public ArrayList<Transaction> getTransactions(String username) throws SQLException {
 

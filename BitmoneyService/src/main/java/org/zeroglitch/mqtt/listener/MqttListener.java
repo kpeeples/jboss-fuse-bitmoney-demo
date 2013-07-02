@@ -20,6 +20,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 //import org.zeroglitch.mqtt.data.User;
 import org.zeroglitch.mqtt.data.DataManager;
+import org.zeroglitch.mqtt.data.Region;
 import org.zeroglitch.mqtt.data.Transaction;
 import org.zeroglitch.mqtt.data.User;
 
@@ -180,13 +181,25 @@ public class MqttListener implements Listener, Runnable {
 			 Element eElement = (Element)node;
 			 
 			 StringBuffer ratesMessage = new StringBuffer();
+			   
+			   
+			   
+			   DataManager dm = new DataManager();
+
+			   ArrayList<Region> elements = dm.getRegionBalances();
+			   
 			   ratesMessage.append("<BitmoneyExchange>");
 			   ratesMessage.append("<Rates>");
-			   ratesMessage.append("<East>356.00</East>");
-			   ratesMessage.append("<West>256.00</West>");
+			   for (Region el : elements) {
+				   ratesMessage.append("<Region>"); 
+				   ratesMessage.append("<Name>" + el.getName() + "</Name>");  
+				   ratesMessage.append("<Rate>" + el.getRate() + "</Rate>"); 
+				   ratesMessage.append("</Region>");  
+			   }
 			   ratesMessage.append("</Rates>");
 			   ratesMessage.append("</BitmoneyExchange>");
 			   
+			   			   
 			   BlockingConnection respCon = mqtt.blockingConnection();
 				mqtt.setClientId(eElement.getElementsByTagName("Username").item(0).getTextContent() + "responseSenderRates");
 				respCon.connect();
