@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Export-Package: org.apache.activemq.xbean;uses:="org.apache.activemq.b
+ roker,org.apache.xbean.spring.context.impl,org.springframework.core.i
+ o,org.springframework.beans,org.springframework.context,org.apache.xb
+ ean.spring.context,org.springframework.beans.factory,org.springframew
+ ork.beans.factory.xml,org.apache.activemq.spring,org.slf4j,org.apache
+ .activemq.util,javax.annotation,org.apache.activemq.broker.scheduler,
+ org.apache.activemq.store,org.apache.activemq.usage"
+Built-By: jamie
+Tool: Bnd-0.0.357
+Bundle-Name: BitmoneyService
+Created-By: Apache Maven Bundle Plugin
+Build-Jdk: 1.6.0_51
+Bundle-Version: 0.0.1.SNAPSHOT
+Bnd-LastModified: 1373993392237
+Embed-Transitive: true
+Bundle-ManifestVersion: 2
+Import-Package: javax.annotation,javax.sql,javax.xml.parsers,org.apach
+ e.activemq.broker,org.apache.activemq.broker.scheduler,org.apache.act
+ ivemq.spring,org.apache.activemq.store,org.apache.activemq.usage,org.
+ apache.activemq.util,org.apache.activemq.xbean,org.apache.commons.dbc
+ p,org.apache.xbean.spring.context;version="3.12",org.apache.xbean.spr
+ ing.context.impl;version="3.12",org.fusesource.hawtbuf;version="1.9",
+ org.fusesource.mqtt.client,org.slf4j;version="1.6",org.springframewor
+ k.beans;version="3.1",org.springframework.beans.factory;version="3.1"
+ ,org.springframework.beans.factory.xml;version="3.1",org.springframew
+ ork.context;version="3.1",org.springframework.core.io;version="3.1",o
+ rg.w3c.dom,org.xml.sax
+Bundle-SymbolicName: BitmoneyService
+

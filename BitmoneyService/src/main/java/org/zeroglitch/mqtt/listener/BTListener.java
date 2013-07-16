@@ -90,8 +90,10 @@ public class BTListener {
 				 StringBuffer ratesMessage = new StringBuffer();
 				   ratesMessage.append("<BitmoneyExchange>");
 				   ratesMessage.append("<Rates>");
-				   ratesMessage.append("<East>356.00</East>");
-				   ratesMessage.append("<West>256.00</West>");
+				   ratesMessage.append("<NA>356.00</NA>");
+				   ratesMessage.append("<LTAM>256.00</LTAM>");
+				   ratesMessage.append("<EMEA>456.00</EMEA>");
+				   ratesMessage.append("<APAC>556.00</APAC>");
 				   ratesMessage.append("</Rates>");
 				   ratesMessage.append("</BitmoneyExchange>");
 				   

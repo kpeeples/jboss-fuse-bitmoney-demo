@@ -12,12 +12,12 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="**" kind="src" output="target/classes" path="filters/token/apac">
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources/datasource">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources/datasource">
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/filters/token/apac">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
