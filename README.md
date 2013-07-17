@@ -26,7 +26,10 @@ This demonstration will show how to use Jboss Fuse and Mqtt to communicate from 
 ex. mvn -Pltam clean org.apache.felix:maven-bundle-plugin:bundle install 
 11.  Modify datasource.xml to match the username and password for your mysql instance
 12.  run the bitmoney.sql file to create a default database
-13.  install your fab bundle:  osgi:install -s install -s fab:file:/home/jamie/BitmoneyService-apac-0.0.1-SNAPSHOT.jar
+13.  install your fab bundle:  install -s fab:file:/home/jamie/BitmoneyService-apac-0.0.1-SNAPSHOT.jar
+
+** Setting up each instance as a service **
+https://access.redhat.com/site/documentation/en-US/JBoss_Fuse/6.0/html-single/Configuring_and_Running_JBoss_Fuse/index.html#AMQAdminServiceGenTbl010
 
 **Modify jre.properties**
 Add:
