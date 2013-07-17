@@ -25,11 +25,11 @@
   </bean> 
 
 
+ <!-- 
 	  <bean id="activemq" 
 	      class="org.apache.activemq.camel.component.ActiveMQComponent">
 	    <property name="brokerURL" value="tcp://${system.ip.port}" />
 	  </bean>
- <!-- 
  
     <bean id="na" 
       class="org.apache.activemq.camel.component.ActiveMQComponent">
@@ -56,26 +56,26 @@
   
         <choice>
             <when>
-                <xpath>/BitmoneyExchange/Transfer[Region= 'apac']</xpath>
+                <xpath>/BitmoneyExchange/Transfer[Region= 'APAC']</xpath>
                 <log marker="1" message="Sending to west region"/>
-                <to uri="mqtt:apac?host=tcp://0.0.0.0:${apac.port}?publishTopicName=BITCOIN"/>
+                <to uri="mqtt:apac?host=tcp://0.0.0.0:${apac.port}?publishTopicName=BITCOIN.APAC"/>
             </when>
             
             <when>
-                <xpath>/BitmoneyExchange/Transfer[Region= 'na']</xpath>
+                <xpath>/BitmoneyExchange/Transfer[Region= 'NA']</xpath>
                 <log marker="1" message="Sending to west region"/>
-                <to uri="mqtt:na?host=tcp://0.0.0.0:${na.port}?publishTopicName=BITCOIN"/>
+                <to uri="mqtt:na?host=tcp://0.0.0.0:${na.port}?publishTopicName=BITCOIN.NA"/>
             </when>
             <when>
-                <xpath>/BitmoneyExchange/Transfer[Region= 'emea']</xpath>
+                <xpath>/BitmoneyExchange/Transfer[Region= 'EMEA']</xpath>
                 <log marker="1" message="Sending to west region"/>
-                <to uri="mqtt:emea?host=tcp://0.0.0.0:${emea.port}?publishTopicName=BITCOIN"/>
+                <to uri="mqtt:emea?host=tcp://0.0.0.0:${emea.port}?publishTopicName=BITCOIN.EMEA"/>
             </when>
 <!--         
             <when>
-                <xpath>/BitmoneyExchange/Transfer[Region= 'ltma']</xpath>
+                <xpath>/BitmoneyExchange/Transfer[Region= 'LTAM']</xpath>
                 <log marker="1" message="Sending to west region"/>
-                <to uri="mqtt:emea?host=tcp://0.0.0.0:${ltam.port}?publishTopicName=BITCOIN"/>
+                <to uri="mqtt:emea?host=tcp://0.0.0.0:${ltam.port}?publishTopicName=BITCOIN.LTAM"/>
             </when>
              -->
            

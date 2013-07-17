@@ -2,6 +2,8 @@ package org.zeroglitch.project.bitmoney;
 
 import java.io.StringReader;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -79,8 +81,8 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 	private Button sellButton;
 	private Button transferButton;
 	
-	private TextView east;
-	private TextView west;
+	private TextView apac;
+	private TextView emea;
 	private TextView balance;
 	
 	private GridView gridView;
@@ -105,11 +107,15 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 	String user = "wtjamiegmail.com";
 	String callback = "";
 	String region = "";
-	String eastVal = "";
-	String westVal = "";
+	String apacVal = "";
+	String emeaVal = "";
+	String naVal = "";
+	String ltamVal = "";
 	String balanceVal = "";
 	private String result;
 	private String userId;
+	
+	String port = "1883";
 	
 
 	// Temp Messages
@@ -126,13 +132,17 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 	private Spinner regionSpinner;
 	private TextView valueDisplay;
 	private String transferRegion;
+	private TextView ltam;
+	private TextView na;
+	private String MAIN_TOPIC = "BITCOIN.NA";
+	private Spinner spinner;
 	
 	void setRegMessages() {
 		regMessage = new StringBuffer();
 		regMessage.append("<BitmoneyExchange>");
 		regMessage.append("<Register>");
 		regMessage.append("<Username>" + user + "</Username>");
-		regMessage.append("<CallbackTopic>" + user + "</CallbackTopic>");
+		regMessage.append("<CallbackTopic>" + user + "response</CallbackTopic>");
 		regMessage.append("<Region>" + region + "</Region>");
 		regMessage.append("</Register>");
 		regMessage.append("</BitmoneyExchange>");
@@ -234,7 +244,7 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 			prefSendButton = (Button) findViewById(R.id.prefSendButton);
 			prefSendButton.setOnClickListener(this);
 
-			Spinner spinner = (Spinner) findViewById(R.id.regionSpinner);
+			spinner = (Spinner) findViewById(R.id.regionSpinner);
 			// Create an ArrayAdapter using the string array and a default
 			// spinner layout
 			ArrayAdapter<CharSequence> adapter = ArrayAdapter
@@ -246,37 +256,44 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 			spinner.setAdapter(adapter);
 
 		} else {
-			preferences.edit().putString("NA", region).commit();
+			//preferences.edit().putString("region", "NA").commit();
 
 			myRegion = preferences.getString("region", "NA");
+			MAIN_TOPIC = "BITCOIN." + myRegion;
+			
+			//MAIN_TOPIC = "BITCOIN." + "NA";
 			
 			if ("NA".equals(myRegion)) {
 				myRegionValue = naCoinValue;
+				port = "1883";
 			} else if ("LTAM".equals(myRegion)) {
 				myRegionValue = ltamCoinValue;
+				port = "1884";
 			} else if ("APAC".equals(myRegion)) {
+				port = "1886";
 				myRegionValue = apacCoinValue;
 			} else if ("EMEA".equals(myRegion)) {
+				port = "1885";
 				myRegionValue = emeaCoinValue;
 			}
 			
 			Log.i(TAG, "rate messages call");
 			createConnection();
 			connect();
-			listener();
+			//listener();
 			setContentView(R.layout.main);
 			setupView();
 			setRatesMessage();
 			currentMessage = ratesMessage;
 			Log.i(TAG, "1");
-			send("BITCOIN", ratesMessage.toString(), user + "-rates");
+			send(MAIN_TOPIC , ratesMessage.toString(), user + "-rates");
 			Log.i(TAG, "2");
 
 			setBalanceMessage();
-			send("BITCOIN", balanceMessage.toString(), user + "-balance");
+			send(MAIN_TOPIC, balanceMessage.toString(), user + "-balance");
 
 			setTransactionMessage();
-			send("BITCOIN", transactionMessage.toString(), user + "-transaction");
+			send(MAIN_TOPIC, transactionMessage.toString(), user + "-transaction");
 
 
 			gridView = (GridView) findViewById(R.id.gridView);
@@ -311,6 +328,9 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 		mqtt.setClientId(user + "request" + new java.util.Date().getTime());
 		//sAddress = "tcp://www.zeroglitch.org:1883";
 		sAddress = "tcp://192.168.1.101:1883";
+		sAddress = "tcp://www.zeroglitch.org:" + port;
+		
+		Log.i(TAG, "Creating connection to " + sAddress);
 
 		try {
 			mqtt.setHost(sAddress);
@@ -336,15 +356,17 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 
 	public void setupView() {
 
-		east = (TextView) findViewById(R.id.eastText);
-		west = (TextView) findViewById(R.id.westText);
+		apac = (TextView) findViewById(R.id.apacText);
+		emea = (TextView) findViewById(R.id.emeaText);
+		ltam = (TextView) findViewById(R.id.ltamText);
+		na = (TextView) findViewById(R.id.naText);
 		balance = (TextView) findViewById(R.id.balanceText);
 	}
 
 	public void updateUI() {
 		balance.setText(balanceVal);
-		west.setText(westVal);
-		east.setText(eastVal);
+		emea.setText(emeaVal);
+		apac.setText(apacVal);
 	}
 
 	public void onClick(View v) {
@@ -352,14 +374,35 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 
 		if (v == prefSendButton) {
 			user = userText.getText().toString().trim();
+			region = new String(spinner.getSelectedItem().toString());
+			
+			MAIN_TOPIC = "BITCOIN." + region;
+			
+			//MAIN_TOPIC = "BITCOIN." + "NA";
+			
+			if ("NA".equals(myRegion)) {
+				myRegionValue = naCoinValue;
+				port = "1883";
+			} else if ("LTAM".equals(myRegion)) {
+				myRegionValue = ltamCoinValue;
+				port = "1884";
+			} else if ("APAC".equals(myRegion)) {
+				port = "1886";
+				myRegionValue = apacCoinValue;
+			} else if ("EMEA".equals(myRegion)) {
+				port = "1885";
+				myRegionValue = emeaCoinValue;
+			}
+				
+				
 			createConnection();
 
 			connect();
-			listener();
+			listener(user + "response");
 			setRegMessages();
 			currentMessage = regMessage;
 
-			send("BITCOIN", regMessage.toString(), user + "response");
+			send(MAIN_TOPIC, regMessage.toString(), user + "response");
 			// listener();
 		}
 		
@@ -375,16 +418,16 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 		if (v== transferButton) {
 			showTransferDialog("Sell");
 			//setTransferMessage();
-			//send("BITCOIN", transferMessage.toString(), user + "/rates");
+			//send(MAIN_TOPIC, transferMessage.toString(), user + "/rates");
 		}
 
 		if (v == sendButton) {
 			connect();
-			listener();
+			listener(user + "response");
 			Log.i(TAG, "SEND BUTTON");
 			setRatesMessage();
 			currentMessage = ratesMessage;
-			send("BITCOIN", ratesMessage.toString(), user + "/rates");
+			send(MAIN_TOPIC, ratesMessage.toString(), user + "/rates");
 
 		}
 	}
@@ -396,7 +439,7 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 		LayoutInflater li = LayoutInflater.from(this);
 		View promptsView = li.inflate(R.layout.prompts, null);
 		
-		TextView tv = (TextView)findViewById(R.id.textView1);
+		TextView tv = (TextView)promptsView.findViewById(R.id.textView1);
 		tv.setText("Enter amount to " + action);
 
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -420,10 +463,10 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 					
 					if (action.equals("Buy")) {
 						setBuyMessage();
-						send("BITCOIN", buyMessage.toString(), user + "-buy");
+						send(MAIN_TOPIC, buyMessage.toString(), user + "-buy");
 					} else {
 						setSellMessage();
-						send("BITCOIN", sellMessage.toString(), user +  "-sell");
+						send(MAIN_TOPIC, sellMessage.toString(), user +  "-sell");
 						
 					}
 			    }
@@ -479,7 +522,7 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 					Log.i(TAG, "the result: " + result);
 					
 					setTransferMessage();
-					send("BITCOIN", transferMessage.toString(), user +  "-transfer");
+					send(MAIN_TOPIC, transferMessage.toString(), user +  "-transfer");
 				
 			    }
 			  })
@@ -540,17 +583,27 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 
 											Node node = n.item(0);
 											Element eElement = (Element) node;
-											Log.i(TAG,"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: " + eElement .getElementsByTagName( "East") .item(0) .getTextContent());
-											Log.i(TAG, eElement.getElementsByTagName( "West").item(0) .getTextContent()); 
+											Log.i(TAG,"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: " + eElement .getElementsByTagName( "EMEA") .item(0) .getTextContent());
+											Log.i(TAG, eElement.getElementsByTagName( "APAC").item(0) .getTextContent()); 
 
-											if (!"".equals(eElement .getElementsByTagName( "East").item(0) .getTextContent())) {
-												east.setText(eElement .getElementsByTagName( "East").item(0) .getTextContent());
-												eastVal = eElement .getElementsByTagName( "East").item(0) .getTextContent();
+											if (!"".equals(eElement .getElementsByTagName( "APAC").item(0) .getTextContent())) {
+												apac.setText(eElement .getElementsByTagName( "APAC").item(0) .getTextContent());
+												apacVal = eElement .getElementsByTagName( "APAC").item(0) .getTextContent();
 											}
-											Log.i(TAG, "EASt: " + east.getText()); 
-											if (!"".equals(eElement .getElementsByTagName( "West").item(0) .getTextContent())) {
-												west.setText(eElement .getElementsByTagName( "West").item(0) .getTextContent());
-												westVal = eElement .getElementsByTagName( "West").item(0) .getTextContent();
+											Log.i(TAG, "EASt: " + apac.getText()); 
+											if (!"".equals(eElement .getElementsByTagName( "EMEA").item(0) .getTextContent())) {
+												emea.setText(eElement .getElementsByTagName( "EMEA").item(0) .getTextContent());
+												emeaVal = eElement .getElementsByTagName( "EMEA").item(0) .getTextContent();
+											}
+											Log.i(TAG, "EASt: " + emea.getText()); 
+											if (!"".equals(eElement .getElementsByTagName( "LTAM").item(0) .getTextContent())) {
+												ltam.setText(eElement .getElementsByTagName( "LTAM").item(0) .getTextContent());
+												ltamVal = eElement .getElementsByTagName( "LTAM").item(0) .getTextContent();
+											}
+											Log.i(TAG, "EASt: " + ltam.getText()); 
+											if (!"".equals(eElement .getElementsByTagName( "NA").item(0) .getTextContent())) {
+												na.setText(eElement .getElementsByTagName( "NA").item(0) .getTextContent());
+												naVal = eElement .getElementsByTagName( "NA").item(0) .getTextContent();
 											}
 
 										}
@@ -575,15 +628,15 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 										}
 										n = doc.getElementsByTagName("Sell");
 										if (messagePayLoad.indexOf("<Sell>") > 0) {
-											send("BITCOIN", balanceMessage.toString(), user + "-balance");
-											send("BITCOIN", transactionMessage.toString(), user + "-transaction");
+											send(MAIN_TOPIC, balanceMessage.toString(), user + "-balance");
+											send(MAIN_TOPIC, transactionMessage.toString(), user + "-transaction");
 										}
 										
 										n = doc.getElementsByTagName("Buy");
 										if (messagePayLoad.indexOf("<Buy>") > 0) {
-											send("BITCOIN", balanceMessage.toString(), user + "-balance");
+											send(MAIN_TOPIC, balanceMessage.toString(), user + "-balance");
 											Log.i(TAG, "sending transaction  message");
-											send("BITCOIN", transactionMessage.toString(), user + "-transaction");
+											send(MAIN_TOPIC, transactionMessage.toString(), user + "-transaction");
 
 
 										}
@@ -604,7 +657,15 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 											for (int i = 0; i < n.getLength(); i++) {
 												Node node = n.item(i);
 												Element eElement = (Element) node;
-												adapter.add(eElement .getElementsByTagName( "TranDate") .item(0) .getTextContent());
+												Date date = null;
+												String tranDate = eElement .getElementsByTagName( "TranDate") .item(0) .getTextContent();
+												SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+												
+												date = sdf.parse(tranDate);
+												
+												SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd");
+												
+												adapter.add(format.format(date));
 												adapter.add(eElement .getElementsByTagName( "Credit") .item(0) .getTextContent());
 												adapter.add(eElement .getElementsByTagName( "Debit") .item(0) .getTextContent());
 											}
@@ -685,6 +746,7 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 
 	private void send(final String topic, final String message, String callback) {
 		Log.i(TAG, "send.in : " + callback);
+		Log.i(TAG, "sending to : " + topic);
 		sMessage = currentMessage.toString();
 		sDestination = "sDestination";
 		if (connection != null) {
@@ -762,9 +824,9 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 		}
 	}
 
-	private void listener() {
+	private void listener(String topic) {
 
-		Topic[] topics = { new Topic(user + "response", QoS.AT_LEAST_ONCE) };
+		Topic[] topics = { new Topic(topic, QoS.AT_LEAST_ONCE) };
 		// connection.sub
 		connection.subscribe(topics).then(new Callback<byte[]>() {
 			public void onSuccess(byte[] qoses) {

@@ -65,12 +65,13 @@ public class BTListener {
 				
 				
 				
+				log.info("sending response message: " + responseMessage);
 				BlockingConnection respCon = mqtt.blockingConnection();
 				mqtt.setClientId(eElement.getElementsByTagName("Username").item(0).getTextContent() + "responseSenderuseradd");
 				respCon.connect();
 				 //Publish messages to a topic using the publish method:
 
-				respCon.publish(eElement.getElementsByTagName("Username").item(0).getTextContent() + "response", responseMessage.getBytes(), QoS.EXACTLY_ONCE, false);
+				respCon.publish(eElement.getElementsByTagName("CallbackTopic").item(0).getTextContent(), responseMessage.getBytes(), QoS.EXACTLY_ONCE, false);
 				//Message m = respCon.receive();
 				//log.info(m.getPayload().toString());
 				log.info("responded");

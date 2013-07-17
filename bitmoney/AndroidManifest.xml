@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="org.zeroglitch.project.bitmoney" android:versionCode="1" android:versionName="0.0.1-SNAPSHOT">
 
-  <uses-sdk android:minSdkVersion="8"
+  <uses-sdk android:minSdkVersion="11"
             android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.INTERNET"/>
