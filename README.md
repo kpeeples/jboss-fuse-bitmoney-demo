@@ -22,11 +22,17 @@ This demonstration will show how to use Jboss Fuse and Mqtt to communicate from 
 8.  Modify org.apache.karaf.features.cfg and edit the featuresBoot line
  featuresBoot=jasypt-encryption,config,management,fabric-boot-commands,fabric-bundle,fabric-maven-proxy,patch,activemq,mq-fabric,camel-xmlbeans,camel,camel-cxf,camel-jms,activemq-xbeans,activemq-camel,camel-blueprint,camel-csv,camel-ftp,camel-bindy,camel-jdbc,camel-exec,camel-jasypt,camel-saxon,camel-snmp,camel-ognl,camel-routebox,camel-script,camel-spring-javaconfig,camel-jaxb,camel-jetty,camel-jmx,camel-mail,camel-paxlogging,camel-rmi,camel-sql,war,camel-xmlbeans,camel-xmljson,camel-xmlsecurity
 9.  Repeat these steps for each instance.  Make sure to modify the ports in each instance to match the ports in the region file in token/filters/<region>
-10.  compile mvn -P<region> clean org.apache.felix:maven-bundle-plugin:bundle install 
+10.  mvn -P<env> initialize org.apache.felix:maven-bundle-plugin:bundle install 
 ex. mvn -Pltam clean org.apache.felix:maven-bundle-plugin:bundle install 
 11.  Modify datasource.xml to match the username and password for your mysql instance
 12.  run the bitmoney.sql file to create a default database
-13.  install your fab bundle:  osgi:install -s fab:mvn:org.zeroglitch.bitmoney/BitmoneyService
+13.  install your fab bundle:  install -s fab:file:/home/jamie/BitmoneyService-apac-0.0.1-SNAPSHOT.jar
+
+
+
+
+**Setting up each instance as a service**
+https://access.redhat.com/site/documentation/en-US/JBoss_Fuse/6.0/html-single/Configuring_and_Running_JBoss_Fuse/index.html#AMQAdminServiceGenTbl010
 
 **Modify jre.properties**
 Add:
