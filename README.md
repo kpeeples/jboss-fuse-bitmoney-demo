@@ -26,7 +26,7 @@ This demonstration will show how to use Jboss Fuse and Mqtt to communicate from 
 ex. mvn -Pltam clean org.apache.felix:maven-bundle-plugin:bundle install 
 11.  Modify datasource.xml to match the username and password for your mysql instance
 12.  run the bitmoney.sql file to create a default database
-13.  install your fab bundle:  osgi:install -s fab:mvn:org.zeroglitch.bitmoney/BitmoneyService
+13.  install your fab bundle:  osgi:install -s install -s fab:file:/home/jamie/BitmoneyService-apac-0.0.1-SNAPSHOT.jar
 
 **Modify jre.properties**
 Add:
