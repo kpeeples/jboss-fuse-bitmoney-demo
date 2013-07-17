@@ -7,7 +7,7 @@ This demonstration will show how to use Jboss Fuse and Mqtt to communicate from 
 ## Required Software:
 1.  jboss fuse version 6.0.0 http://www.jboss.org/products/fuse
 2.  jboss fuse IDE http://www.jboss.org/products/fuse
-3.  Android Development Toolkit
+3.  Android Development Toolkit (https://developer.android.com/tools/sdk/eclipse-adt.html)
 4.  m2e for android
 5.  Maven version 3.+
 
@@ -85,6 +85,59 @@ javax.ejb, \
 3.  edit system.properties change org.osgi.service.http.port and activemq.port
 
 4.  edit jetty.xml
+
+#Configure Android
+**Install The Android SDK**
+1. Download the SDK http://dl.google.com/android/android-sdk_r22.0.1-linux.tgz
+2. Unpack the .tgz file you've downloaded. By default, the SDK files are unpacked into a directory named android-sdk-linux_x86. Move it to an appropriate location on your machine, such as a "Development" directory in your home directory.
+Make a note of the name and location of the SDK directory on your system—you will need to refer to the SDK directory later, when setting up the ADT plugin and when using the SDK tools from the command line.
+3. Download the ADT bundle http://dl.google.com/android/adt/adt-bundle-linux-x86-20130522.zip
+
+**Install Eclipse Pluging**
+1. Start Eclipse, then select Help > Install New Software.
+2. Click Add, in the top-right corner.
+3. In the Add Repository dialog that appears, enter "ADT Plugin" for the Name and the following URL for the Location:
+https://dl-ssl.google.com/android/eclipse/
+4. Click OK.
+5. If you have trouble acquiring the plugin, try using "http" in the Location URL, instead of "https" (https is preferred for security reasons).
+6. In the Available Software dialog, select the checkbox next to Developer Tools and click Next.
+7. In the next window, you'll see a list of the tools to be downloaded. Click Next.
+8. Read and accept the license agreements, then click Finish.
+9. If you get a security warning saying that the authenticity or validity of the software can't be established, click OK.
+10. When the installation completes, restart Eclipse.
+11. Configure the ADT Plugin
+12. Once Eclipse restarts, you must specify the location of your Android SDK directory:
+
+13. In the "Welcome to Android Development" window that appears, select Use existing SDKs.
+14. Browse and select the location of the Android SDK directory you recently downloaded and unpacked.
+15. Click Next.
+
+
+**Creating an emulator**
+1. Open a terminal
+2. cd to <android_sdk_location>/tools
+3. run ./android
+4. Select Tools, Android 4.2.2 (API 17)
+5. Click Install
+6. Click Accept License
+7. Click Install
+8. After the installation is complete, Select the Tools, Manage SDKs menu item
+9. Click New
+10. type nexus4 for the name
+11. Select Galaxy Nexus S as the device
+12. Select Android 4.2.2 - API Level 17 as the device
+13. Click OK
+14. Click OK
+
+**Import project**
+1.  In Eclipse select Import
+2.  Select existing maven project
+3.  Navigate to the jboss-fuse-bitmoney-demo directory
+4.  Import the BitMoneyService and bitmoney projects
+5.  In eclipse right click on the bitmoney project
+6.  Select run as android application
+7.  select your emulator
+8.  click ok
 
 # Android Configuration
 1.  Start an android emulator, or plug in a device
