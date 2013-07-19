@@ -4,12 +4,77 @@ jboss-fuse-bitmoney-demo
 #  Jboss Fuse, Camel, Android, Mqtt
 This demonstration will show how to use Jboss Fuse and Mqtt to communicate from android to a fuse instance.  Messages are routed between fuse instances using mqtt topics, and beans, utlizing spring and camel.
 
-## Required Software:
+## Required Software: 
+Download the software necessary to run the application.  Installation instructions are below.
 1.  jboss fuse version 6.0.0 http://www.jboss.org/products/fuse
 2.  jboss fuse IDE http://www.jboss.org/products/fuse
 3.  Android Development Toolkit (https://developer.android.com/tools/sdk/eclipse-adt.html)
-4.  m2e for android
-5.  Maven version 3.+
+5.  Maven version 3.+ (sudo yum install maven or manually at http://maven.apache.org/download.cgi) 
+
+## Installing Jboss Fuse IDE
+1.  Open a terminal
+2.  mkdir bitmoney-demo
+3.  mv <dowload diretory>/FuseID-6.0.0.129-linux.gtk.x86.zip ~/bitmoney-demo
+4.  cd ~/bitmoney-demo
+5.  unzip FuseID-6.0.0.129-linux.gtk.x86.zip
+6.  rm FuseID-6.0.0.129-linux.gtk.x86.zip
+
+## Install the Android SDK
+1.  Open a terminal
+2.  cd bitmoney-demo
+3.  tar xvfz <download directory>/android-sdk_r22.0.1-linuz.tgz
+
+## running the IDE
+1.  Open a terman
+2.  cd bitmoney-demo
+3.  ./FuseIDE
+
+**Creating an emulator**
+1. Open a terminal
+2. cd to <android_sdk_location>/tools (bitmoney-demo/android-sdk-linux)
+3. run ./android
+4. Select Tools, Android 4.2.2 (API 17)
+5. Click Install
+6. Click Accept License
+7. Click Install
+8. After the installation is complete, Select the Tools, Manage SDKs menu item
+9. Click New
+10. type nexus4 for the name
+11. Select Galaxy Nexus as the device
+12. Select Android 4.2.2 - API Level 17 as the device
+13. Click OK
+14. Click OK
+15. Hit Control-C in the terminal window
+
+**Installing m2e**
+1.  Run the FuseIDE if it is not open
+You can install the Android Connector for Maven via the Eclipse Marketplace. 
+2.  Select Help -> "Install New Software..."
+3.  If Android SDK is not there "Add" other wise skip to 
+4.  Enter Name: Eclipse Software Location: http://download.eclipse.org/releases/juno
+5.  Repeat for the following repositories
+Name: M2E Maven Archiver Connector - 
+Location: http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-mavenarchiver/0.15.0/N/0.15.0.201207090125/
+.
+Name: org.sonatype.tycho.update 
+Location: http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.6.0/N/0.6.0.201207302152/
+.
+Name: Maven Integration for Android Development Tools Dependency Sites
+Location: http://rgladwell.github.com/m2e-android/updates/
+6. search for "android m2e".
+Click the Install button next to the Android Connector for Maven that appears and follow the path through the wizard dialog to install the plug-in and its dependencies (including the Android Development Toolkit and the Maven for Eclipse m2e plug-in). Accept the terms-and-conditions and click Finish.
+Once you restart your Eclipse workspace you should be ready to start using the Android Connector.
+
+**Import project**
+1.  In Eclipse select Import
+2.  Select existing maven project
+3.  Navigate to the jboss-fuse-bitmoney-demo directory
+4.  Import the BitMoneyService and bitmoney projects
+5.  In eclipse right click on the bitmoney project
+6.  Select run as android application
+7.  select your emulator
+8.  click ok
+
 
 ## Installation of Jboss Fuse
 1.  create four directories apac, na, emea, ltma
@@ -86,12 +151,6 @@ javax.ejb, \
 
 4.  edit jetty.xml
 
-#Configure Android
-**Install The Android SDK**
-1. Download the SDK http://dl.google.com/android/android-sdk_r22.0.1-linux.tgz
-2. Unpack the .tgz file you've downloaded. By default, the SDK files are unpacked into a directory named android-sdk-linux_x86. Move it to an appropriate location on your machine, such as a "Development" directory in your home directory.
-Make a note of the name and location of the SDK directory on your system—you will need to refer to the SDK directory later, when setting up the ADT plugin and when using the SDK tools from the command line.
-3. Download the ADT bundle http://dl.google.com/android/adt/adt-bundle-linux-x86-20130522.zip
 
 **Install Eclipse Pluging**
 1. Start Eclipse, then select Help > Install New Software.
@@ -113,36 +172,6 @@ https://dl-ssl.google.com/android/eclipse/
 15. Click Next.
 
 
-**Creating an emulator**
-1. Open a terminal
-2. cd to <android_sdk_location>/tools
-3. run ./android
-4. Select Tools, Android 4.2.2 (API 17)
-5. Click Install
-6. Click Accept License
-7. Click Install
-8. After the installation is complete, Select the Tools, Manage SDKs menu item
-9. Click New
-10. type nexus4 for the name
-11. Select Galaxy Nexus S as the device
-12. Select Android 4.2.2 - API Level 17 as the device
-13. Click OK
-14. Click OK
-
-**Installing m2e**
-You can install the Android Connector for Maven via the Eclipse Marketplace. Select Help -> Eclipse Marketplace... and search for "android m2e".
-Click the Install button next to the Android Connector for Maven that appears and follow the path through the wizard dialog to install the plug-in and its dependencies (including the Android Development Toolkit and the Maven for Eclipse m2e plug-in). Accept the terms-and-conditions and click Finish.
-Once you restart your Eclipse workspace you should be ready to start using the Android Connector.
-
-**Import project**
-1.  In Eclipse select Import
-2.  Select existing maven project
-3.  Navigate to the jboss-fuse-bitmoney-demo directory
-4.  Import the BitMoneyService and bitmoney projects
-5.  In eclipse right click on the bitmoney project
-6.  Select run as android application
-7.  select your emulator
-8.  click ok
 
 # Android Configuration
 1.  Start an android emulator, or plug in a device
