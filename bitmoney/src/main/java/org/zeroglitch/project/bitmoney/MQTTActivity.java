@@ -261,7 +261,7 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 			myRegion = preferences.getString("region", "NA");
 			MAIN_TOPIC = "BITCOIN." + myRegion;
 			
-			//MAIN_TOPIC = "BITCOIN." + "NA";
+			MAIN_TOPIC = "BITCOIN." + "NA";
 			
 			if ("NA".equals(myRegion)) {
 				myRegionValue = naCoinValue;
@@ -328,7 +328,7 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 		mqtt.setClientId(user + "request" + new java.util.Date().getTime());
 		//sAddress = "tcp://www.zeroglitch.org:1883";
 		sAddress = "tcp://192.168.1.101:1883";
-		sAddress = "tcp://www.zeroglitch.org:" + port;
+		sAddress = "tcp://www.zeroglitch.org:" + "1883"; //+ port;
 		
 		Log.i(TAG, "Creating connection to " + sAddress);
 
@@ -361,6 +361,10 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 		ltam = (TextView) findViewById(R.id.ltamText);
 		na = (TextView) findViewById(R.id.naText);
 		balance = (TextView) findViewById(R.id.balanceText);
+		
+		
+		
+		
 	}
 
 	public void updateUI() {
@@ -378,7 +382,7 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 			
 			MAIN_TOPIC = "BITCOIN." + region;
 			
-			//MAIN_TOPIC = "BITCOIN." + "NA";
+			MAIN_TOPIC = "BITCOIN." + "NA";
 			
 			if ("NA".equals(myRegion)) {
 				myRegionValue = naCoinValue;
@@ -398,11 +402,11 @@ public class MQTTActivity extends Activity implements OnClickListener, OnItemSel
 			createConnection();
 
 			connect();
-			listener(user + "response");
+			listener(user);
 			setRegMessages();
 			currentMessage = regMessage;
 
-			send(MAIN_TOPIC, regMessage.toString(), user + "response");
+			send(MAIN_TOPIC, regMessage.toString(), user);
 			// listener();
 		}
 		

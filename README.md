@@ -129,6 +129,11 @@ https://dl-ssl.google.com/android/eclipse/
 13. Click OK
 14. Click OK
 
+**Installing m2e**
+You can install the Android Connector for Maven via the Eclipse Marketplace. Select Help -> Eclipse Marketplace... and search for "android m2e".
+Click the Install button next to the Android Connector for Maven that appears and follow the path through the wizard dialog to install the plug-in and its dependencies (including the Android Development Toolkit and the Maven for Eclipse m2e plug-in). Accept the terms-and-conditions and click Finish.
+Once you restart your Eclipse workspace you should be ready to start using the Android Connector.
+
 **Import project**
 1.  In Eclipse select Import
 2.  Select existing maven project

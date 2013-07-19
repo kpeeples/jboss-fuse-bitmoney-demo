@@ -23,9 +23,11 @@ public class BTListener {
 	private static final Logger log = Logger.getLogger(BTListener.class.getName());
 
 	final MQTT mqtt = new MQTT();
+	 BlockingConnection respCon;
 	
 	public BTListener() {
 		log.info(" I am bt listener");
+		respCon = mqtt.blockingConnection();
 	}
 	
 	public String onMessage(String body) {
@@ -50,32 +52,35 @@ public class BTListener {
 				DataManager dm = new DataManager();
 				User user = dm.getUser(eElement.getElementsByTagName("Username").item(0).getTextContent());
 
-				String responseMessage = "";
+				String message = "";
 				if (user == null) {
 					try {
 					dm.insertUser(eElement.getElementsByTagName("Username").item(0).getTextContent(),
 							eElement.getElementsByTagName("Region").item(0).getTextContent(),
 							5);
-						responseMessage = "SUCCESS";
+						message = "SUCCESS";
 					} catch (Exception e) {
 						e.printStackTrace();
-						responseMessage = "FAILEDINSERT";
+						message = "FAILEDINSERT";
 					}
-				} else responseMessage = "USERALREADYEXISTS";
+				} else message = "USERALREADYEXISTS";
 				
 				
 				
-				log.info("sending response message: " + responseMessage);
-				BlockingConnection respCon = mqtt.blockingConnection();
-				mqtt.setClientId(eElement.getElementsByTagName("Username").item(0).getTextContent() + "responseSenderuseradd");
-				respCon.connect();
+				log.info("sending response message: " + message);
+				// BlockingConnection respCon = mqtt.blockingConnection();
+				 sendCallBack(eElement.getElementsByTagName("Username").item(0).getTextContent() + "responseSenderuseradd",
+						 eElement.getElementsByTagName("Username").item(0).getTextContent(),
+						 new StringBuffer(message));
+				//mqtt.setClientId(eElement.getElementsByTagName("Username").item(0).getTextContent() + "responseSenderuseradd");
+				//respCon.connect();
 				 //Publish messages to a topic using the publish method:
 
-				respCon.publish(eElement.getElementsByTagName("CallbackTopic").item(0).getTextContent(), responseMessage.getBytes(), QoS.EXACTLY_ONCE, false);
-				//Message m = respCon.receive();
+				//respCon.publish(eElement.getElementsByTagName("CallbackTopic").item(0).getTextContent(), message.getBytes(), QoS.EXACTLY_ONCE, false);
+				//message m = respCon.receive();
 				//log.info(m.getPayload().toString());
 				log.info("responded");
-				respCon.disconnect();
+				//respCon.disconnect();
 				
 
 			 } 
@@ -88,26 +93,30 @@ public class BTListener {
 				 Node node = n.item(0);
 				 Element eElement = (Element)node;
 				 
-				 StringBuffer ratesMessage = new StringBuffer();
-				   ratesMessage.append("<BitmoneyExchange>");
-				   ratesMessage.append("<Rates>");
-				   ratesMessage.append("<NA>356.00</NA>");
-				   ratesMessage.append("<LTAM>256.00</LTAM>");
-				   ratesMessage.append("<EMEA>456.00</EMEA>");
-				   ratesMessage.append("<APAC>556.00</APAC>");
-				   ratesMessage.append("</Rates>");
-				   ratesMessage.append("</BitmoneyExchange>");
+				 StringBuffer message = new StringBuffer();
+				   message.append("<BitmoneyExchange>");
+				   message.append("<Rates>");
+				   message.append("<NA>356.00</NA>");
+				   message.append("<LTAM>256.00</LTAM>");
+				   message.append("<EMEA>456.00</EMEA>");
+				   message.append("<APAC>556.00</APAC>");
+				   message.append("</Rates>");
+				   message.append("</BitmoneyExchange>");
+
+					//mqtt.setClientId(eElement.getElementsByTagName("Username").item(0).getTextContent() + "responseSenderRates");
+					log.info("the host: " + mqtt.getHost());
+				 sendCallBack(eElement.getElementsByTagName("Username").item(0).getTextContent() + "responseSenderRates",
+						 eElement.getElementsByTagName("Username").item(0).getTextContent(),
+						 message);
 				   
-				   BlockingConnection respCon = mqtt.blockingConnection();
-					mqtt.setClientId(eElement.getElementsByTagName("Username").item(0).getTextContent() + "responseSenderRates");
-					respCon.connect();
+					//respCon.connect();
 					 //Publish messages to a topic using the publish method:
 
-					respCon.publish(eElement.getElementsByTagName("Username").item(0).getTextContent(), ratesMessage.toString().getBytes(), QoS.EXACTLY_ONCE, false);
-					//Message m = respCon.receive();
+					//respCon.publish(eElement.getElementsByTagName("Username").item(0).getTextContent(), message.toString().getBytes(), QoS.EXACTLY_ONCE, false);
+					//message m = respCon.receive();
 					//log.info(m.getPayload().toString());
 					log.info("responded");
-					respCon.disconnect();
+					//respCon.disconnect();
 			 }
 			 
 			 n = doc.getElementsByTagName("Balance");
@@ -123,24 +132,27 @@ public class BTListener {
 				User user = dm.getUser(eElement.getElementsByTagName("Username").item(0).getTextContent());
 
 				 
-				 StringBuffer ratesMessage = new StringBuffer();
-				   ratesMessage.append("<BitmoneyExchange>");
-				   ratesMessage.append("<Balance>");
-				   ratesMessage.append("<UserId>" + user.getId() + "</UserId>");
-				   ratesMessage.append("<BalanceAmount>" + user.getBalance() + "</BalanceAmount>");
-				   ratesMessage.append("</Balance>");
-				   ratesMessage.append("</BitmoneyExchange>");
+				 StringBuffer message = new StringBuffer();
+				   message.append("<BitmoneyExchange>");
+				   message.append("<Balance>");
+				   message.append("<UserId>" + user.getId() + "</UserId>");
+				   message.append("<BalanceAmount>" + user.getBalance() + "</BalanceAmount>");
+				   message.append("</Balance>");
+				   message.append("</BitmoneyExchange>");
 				   
-				   BlockingConnection respCon = mqtt.blockingConnection();
-					mqtt.setClientId(eElement.getElementsByTagName("Username").item(0).getTextContent() + "responseSenderBalance");
-					respCon.connect();
+				   //BlockingConnection respCon = mqtt.blockingConnection();
+				 sendCallBack(eElement.getElementsByTagName("Username").item(0).getTextContent() + "responseSenderBalance",
+						 eElement.getElementsByTagName("Callback").item(0).getTextContent(),
+						 message);
+				//	mqtt.setClientId(eElement.getElementsByTagName("Username").item(0).getTextContent() + "responseSenderBalance");
+				//	respCon.connect();
 					 //Publish messages to a topic using the publish method:
 
-					respCon.publish(eElement.getElementsByTagName("Callback").item(0).getTextContent(), ratesMessage.toString().getBytes(), QoS.EXACTLY_ONCE, false);
-					//Message m = respCon.receive();
+				//	respCon.publish(eElement.getElementsByTagName("Callback").item(0).getTextContent(), message.toString().getBytes(), QoS.EXACTLY_ONCE, false);
+					//message m = respCon.receive();
 					//log.info(m.getPayload().toString());
 					log.info("responded");
-					respCon.disconnect();
+				//	respCon.disconnect();
 			 }
 			 
 			 n = doc.getElementsByTagName("Buy");
@@ -167,7 +179,7 @@ public class BTListener {
 				 message.append("</Buy>");
 				 message.append("</BitmoneyExchange>");
 				   
-				 sendCallBack(eElement.getElementsByTagName("Callback").item(0).getTextContent() + "responseSenderBalance",
+				 sendCallBack(eElement.getElementsByTagName("Callback").item(0).getTextContent() + "responseSenderBuy",
 						 eElement.getElementsByTagName("Callback").item(0).getTextContent(),
 						 message);
 			 }
@@ -196,7 +208,7 @@ public class BTListener {
 				 message.append("</Sell>");
 				 message.append("</BitmoneyExchange>");
 				   
-				 sendCallBack(eElement.getElementsByTagName("Callback").item(0).getTextContent() + "responseSenderBalance",
+				 sendCallBack(eElement.getElementsByTagName("Callback").item(0).getTextContent() + "responseSenderSell",
 						 eElement.getElementsByTagName("Callback").item(0).getTextContent(),
 						 message);
 			 }
@@ -214,33 +226,36 @@ public class BTListener {
 				ArrayList<Transaction> elements = dm.getTransactions(eElement.getElementsByTagName("Username").item(0).getTextContent());
 
 				 
-				 StringBuffer returnData = new StringBuffer();
-				 returnData.append("<BitmoneyExchange>");
-				 returnData.append("<Transactions>");
+				 StringBuffer message = new StringBuffer();
+				 message.append("<BitmoneyExchange>");
+				 message.append("<Transactions>");
 				 
 				 
 				 
 				 for (Transaction t: elements) {
-					 returnData.append("<Transaction>");
-					 returnData.append("<TranDate>" + t.getTrandate() + "</TranDate>");
-					 returnData.append("<Credit>" + t.getCredit() + "</Credit>");
-					 returnData.append("<Debit>" + t.getDebit() + "</Debit>");
-					 returnData.append("</Transaction>");
+					 message.append("<Transaction>");
+					 message.append("<TranDate>" + t.getTrandate() + "</TranDate>");
+					 message.append("<Credit>" + t.getCredit() + "</Credit>");
+					 message.append("<Debit>" + t.getDebit() + "</Debit>");
+					 message.append("</Transaction>");
 				 }
 			
-				 returnData.append("</Transactions>");
-				 returnData.append("</BitmoneyExchange>");
+				 message.append("</Transactions>");
+				 message.append("</BitmoneyExchange>");
 				   
-				   BlockingConnection respCon = mqtt.blockingConnection();
-					mqtt.setClientId(eElement.getElementsByTagName("Username").item(0).getTextContent() + "responseSenderBalance");
-					respCon.connect();
+				   //BlockingConnection respCon = mqtt.blockingConnection();
+				 sendCallBack(eElement.getElementsByTagName("Username").item(0).getTextContent() + "responseSenderTransactions",
+						 eElement.getElementsByTagName("Callback").item(0).getTextContent(),
+						 message);
+					//mqtt.setClientId(eElement.getElementsByTagName("Username").item(0).getTextContent() + "responseSenderBalance");
+					//respCon.connect();
 					 //Publish messages to a topic using the publish method:
 		
-					respCon.publish(eElement.getElementsByTagName("Callback").item(0).getTextContent(), returnData.toString().getBytes(), QoS.EXACTLY_ONCE, false);
-					//Message m = respCon.receive();
+					//respCon.publish(eElement.getElementsByTagName("Callback").item(0).getTextContent(), message.toString().getBytes(), QoS.EXACTLY_ONCE, false);
+					//message m = respCon.receive();
 					//log.info(m.getPayload().toString());
 					log.info("responded");
-					respCon.disconnect();
+					//respCon.disconnect();
 			 }
 			} catch (Exception ex) {
 			  Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
@@ -249,16 +264,26 @@ public class BTListener {
 	}
 	
 	  private void sendCallBack(String callBackId, String callBackChanel, StringBuffer message) throws Exception {
-		   BlockingConnection respCon = mqtt.blockingConnection();
-			mqtt.setClientId(callBackId);
-			respCon.connect();
-			 //Publish messages to a topic using the publish method:
+		   //BlockingConnection respCon = mqtt.blockingConnection();
+			FutureConnection con = mqtt.futureConnection();
+			log.info("callbackid: " + callBackId);
+			log.info("callBackChanel: " + callBackChanel);
+			log.info("message: " + message);
+			try { 
+				mqtt.setClientId(callBackId + new java.util.Date().getTime());
+				//mqtt.setKeepAlive((short)500);
+				if (!con.isConnected()) con.connect();
+				 //Publish messages to a topic using the publish method:
 
-			respCon.publish(callBackChanel, message.toString().getBytes(), QoS.AT_LEAST_ONCE, false);
-			//Message m = respCon.receive();
-			//log.info(m.getPayload().toString());
-			log.info("responded");
-			respCon.disconnect();
+				con.publish(callBackChanel, message.toString().getBytes(), QoS.AT_LEAST_ONCE, false);
+				//message m = respCon.receive();
+				//log.info(m.getPayload().toString());
+				log.info("responded");
+				// respCon.disconnect();
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
 	  }
 	  
 	  public static Document loadXMLFromString(String xml) throws Exception {
