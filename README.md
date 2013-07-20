@@ -61,19 +61,39 @@ Location: http://repo1.maven.org/maven2/.m2e/connectors/m2eclipse-tycho/0.6.0/N/
 .
 Name: Maven Integration for Android Development Tools Dependency Sites
 Location: http://rgladwell.github.com/m2e-android/updates/
-6. search for "android m2e".
-Click the Install button next to the Android Connector for Maven that appears and follow the path through the wizard dialog to install the plug-in and its dependencies (including the Android Development Toolkit and the Maven for Eclipse m2e plug-in). Accept the terms-and-conditions and click Finish.
-Once you restart your Eclipse workspace you should be ready to start using the Android Connector.
+6. search for "m2e".
+7. Select android configurator for m2e
+8. Click Next
+9. Click Next
+10. Accept License
+11. Click Finish
+12.  Click ok on the security warning
+13.  Click restart now
+14.  On restart configure the sdk
+15.  Click use existing android sdk
+16.  browse to sdk directory bitmoney-demo/android-linux-sdk
+17.  Click ok
+
+**Download the project**
+1.  Open a Terminal
+2.  cd bitmoney-demo
+3.  If git is not installed type sudo yum install git and install
+3.  type git clone http://github.com/kpeeples/jboss-fuse-bitmoney-demo
+
 
 **Import project**
 1.  In Eclipse select Import
 2.  Select existing maven project
 3.  Navigate to the jboss-fuse-bitmoney-demo directory
-4.  Import the BitMoneyService and bitmoney projects
-5.  In eclipse right click on the bitmoney project
-6.  Select run as android application
-7.  select your emulator
-8.  click ok
+4.  Click "OK"
+5.  Select the BitMoneyService and bitmoney projects
+6.  Select OK
+7.  Click Finish
+8.  Click OK on the error that pops up
+9.  Click Finish on the install
+10.  Clock OK on the warning
+11.  Click OK to restart
+
 
 
 ## Installation of Jboss Fuse
@@ -166,7 +186,6 @@ https://dl-ssl.google.com/android/eclipse/
 10. When the installation completes, restart Eclipse.
 11. Configure the ADT Plugin
 12. Once Eclipse restarts, you must specify the location of your Android SDK directory:
-
 13. In the "Welcome to Android Development" window that appears, select Use existing SDKs.
 14. Browse and select the location of the Android SDK directory you recently downloaded and unpacked.
 15. Click Next.
