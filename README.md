@@ -134,6 +134,28 @@ ex. mvn -Pltam clean org.apache.felix:maven-bundle-plugin:bundle install
 11.  Modify datasource.xml to match the username and password for your mysql instance
 12.  run the bitmoney.sql file to create a default database
 13.  install your fab bundle:  install -s fab:file:/home/jamie/BitmoneyService-apac-0.0.1-SNAPSHOT.jar
+14.  
+
+Fuse Step by Step
+ mkdir fuse
+ cd fuse/
+ mkdir na
+mkdir emea
+ mkdir apac
+ mkdir ltam
+cd na/
+ unzip /home/fedora/Downloads/jboss-fuse-full-6.0.0.redhat-024.zip 
+cd ..
+ ls
+ cd apac/
+ unzip /home/fedora/Downloads/jboss-fuse-full-6.0.0.redhat-024.zip 
+ cd ..
+ ls
+ cd emea/
+ unzip /home/fedora/Downloads/jboss-fuse-full-6.0.0.redhat-024.zip 
+  cd ../ltam/
+unzip /home/fedora/Downloads/jboss-fuse-full-6.0.0.redhat-024.zip 
+
 
 
 
