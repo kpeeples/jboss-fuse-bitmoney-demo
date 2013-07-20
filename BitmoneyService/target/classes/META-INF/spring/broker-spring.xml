@@ -12,8 +12,13 @@
   <!-- This creates an embedded ActiveMQ Broker -->
    <broker xmlns="http://activemq.apache.org/schema/core" useJmx="false" persistent="false">
           <transportConnectors>
+<<<<<<< HEAD
        		   <transportConnector name="mqtt" uri="mqtt://0.0.0.0:1884"/>
        		   <transportConnector name="openwire" uri="tcp://0.0.0.0:61004"/>
+=======
+       		   <transportConnector name="mqtt" uri="mqtt://0.0.0.0:1886"/>
+       		   <transportConnector name="openwire" uri="tcp://0.0.0.0:61006"/>
+>>>>>>> 0d2dc77b55ea9a29e551c0d9331eda58844873e7
         </transportConnectors>
     </broker>
    
@@ -25,6 +30,7 @@
   </bean> 
 
 
+<<<<<<< HEAD
  <!-- 
 	  <bean id="activemq" 
 	      class="org.apache.activemq.camel.component.ActiveMQComponent">
@@ -47,11 +53,21 @@
    		 <property name="brokerURL" value="tcp://localhost:1886" />
   	</bean>
   -->
+=======
+	<!--
+	  <bean id="activemq" 
+	      class="org.apache.activemq.camel.component.ActiveMQComponent">
+	    <property name="brokerURL" value="tcp://0.0.0.0:1886" />
+	  </bean>
+		-->
+
+>>>>>>> 0d2dc77b55ea9a29e551c0d9331eda58844873e7
   	<bean id="btListener" class="org.zeroglitch.mqtt.listener.BTListener"></bean>
 	
 	
 	<camelContext id="camel-server" xmlns="http://camel.apache.org/schema/spring">
     <route>
+<<<<<<< HEAD
         <from uri="mqtt:junk?subscribeTopicName=BITCOIN"/>
   
         <choice>
@@ -64,23 +80,40 @@
             <when>
                 <xpath>/BitmoneyExchange/Transfer[Region= 'NA']</xpath>
                 <log marker="1" message="Sending to west region"/>
+=======
+        <from uri="mqtt:apac?subscribeTopicName=BITCOIN.APAC"/>
+  
+        <choice>
+            
+            <when>
+                <xpath>/BitmoneyExchange/Transfer[Region='na']</xpath>
+                <log marker="1" message="Sending to na region"/>
+>>>>>>> 0d2dc77b55ea9a29e551c0d9331eda58844873e7
                 <to uri="mqtt:na?host=tcp://0.0.0.0:1883?publishTopicName=BITCOIN.NA"/>
             </when>
             <when>
-                <xpath>/BitmoneyExchange/Transfer[Region= 'EMEA']</xpath>
+                <xpath>/BitmoneyExchange/Transfer[Region= 'emea']</xpath>
                 <log marker="1" message="Sending to west region"/>
                 <to uri="mqtt:emea?host=tcp://0.0.0.0:1885?publishTopicName=BITCOIN.EMEA"/>
             </when>
 <!--         
             <when>
-                <xpath>/BitmoneyExchange/Transfer[Region= 'LTAM']</xpath>
+                <xpath>/BitmoneyExchange/Transfer[Region= 'ltam']</xpath>
                 <log marker="1" message="Sending to west region"/>
                 <to uri="mqtt:emea?host=tcp://0.0.0.0:1884?publishTopicName=BITCOIN.LTAM"/>
             </when>
+<<<<<<< HEAD
              -->
            
             <otherwise> 
                 <log marker="1" message="sending to default region"/>
+=======
+<!--         
+             -->
+           
+            <otherwise> 
+                <log marker="1" message="sending to default apac region"/>
+>>>>>>> 0d2dc77b55ea9a29e551c0d9331eda58844873e7
                 <bean beanType="org.zeroglitch.mqtt.listener.BTListener" method="onMessage" ref="btListener" id="blhablah"/>
             </otherwise>
         </choice>

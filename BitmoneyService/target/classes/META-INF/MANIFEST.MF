@@ -6,13 +6,19 @@ Export-Package: org.apache.activemq.xbean;uses:="org.apache.activemq.b
  ork.beans.factory.xml,org.apache.activemq.spring,org.slf4j,org.apache
  .activemq.util,javax.annotation,org.apache.activemq.broker.scheduler,
  org.apache.activemq.store,org.apache.activemq.usage"
-Built-By: jamie
+Built-By: fedora
 Tool: Bnd-0.0.357
 Bundle-Name: BitmoneyService
 Created-By: Apache Maven Bundle Plugin
+<<<<<<< HEAD
 Build-Jdk: 1.6.0_22
 Bundle-Version: 0.0.1.SNAPSHOT
 Bnd-LastModified: 1374295365273
+=======
+Build-Jdk: 1.6.0_24
+Bundle-Version: 0.0.1.SNAPSHOT
+Bnd-LastModified: 1374292717876
+>>>>>>> 0d2dc77b55ea9a29e551c0d9331eda58844873e7
 Embed-Transitive: true
 Bundle-ManifestVersion: 2
 Import-Package: javax.annotation,javax.sql,javax.xml.parsers,org.apach

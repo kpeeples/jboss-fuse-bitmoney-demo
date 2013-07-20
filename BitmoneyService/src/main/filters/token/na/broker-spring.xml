@@ -43,25 +43,25 @@
             <when>
                 <xpath>/BitmoneyExchange/Transfer[Region='APAC']</xpath>
                 <log marker="1" message="Sending to apac region"/>
-                <to uri="mqtt:apac?host=tcp://0.0.0.0:${apac.port}?publishTopicName=BITCOIN.APAC"/>
+                <to uri="mqtt:apac?host=tcp://www.zeroglitch.org:${apac.port}?publishTopicName=BITCOIN.APAC"/>
             </when>
             
 <!--         
             <when>
                 <xpath>/BitmoneyExchange/Transfer[Region= 'na']</xpath>
                 <log marker="1" message="Sending to west region"/>
-                <to uri="mqtt:na?host=tcp://0.0.0.0:${na.port}?publishTopicName=BITCOIN"/>
+                <to uri="mqtt:na?host=tcp://www.zeroglitch.org:${na.port}?publishTopicName=BITCOIN"/>
             </when>
              -->
             <when>
                 <xpath>/BitmoneyExchange/Transfer[Region= 'EMEA']</xpath>
                 <log marker="1" message="Sending to west region"/>
-                <to uri="mqtt:emea?host=tcp://0.0.0.0:${emea.port}?publishTopicName=BITCOIN.EMEA"/>
+                <to uri="mqtt:emea?host=tcp://www.zeroglitch.org:${emea.port}?publishTopicName=BITCOIN.EMEA"/>
             </when>
             <when>
                 <xpath>/BitmoneyExchange/Transfer[Region= 'LTAM']</xpath>
                 <log marker="1" message="Sending to west region"/>
-                <to uri="mqtt:emea?host=tcp://0.0.0.0:${ltam.port}?publishTopicName=BITCOIN.LTAM"/>
+                <to uri="mqtt:emea?host=tcp://www.zeroglitch.org:${ltam.port}?publishTopicName=BITCOIN.LTAM"/>
             </when>
            
             <otherwise> 

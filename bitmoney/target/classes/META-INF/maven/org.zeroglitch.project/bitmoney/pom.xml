@@ -11,7 +11,7 @@
     <properties>
         <platform.version>4.1.1.4</platform.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-     	<android.sdk.path>/Users/jamie/dev/android-sdk-macosx</android.sdk.path>
+     	<android.sdk.path>/home/fedora/bitmoney-demo/android-sdk-linux</android.sdk.path>
     </properties>
 
     <dependencies>
@@ -60,8 +60,8 @@
                 <configuration>
                     <sdk>
                   <!-- platform or api level (api level 4 = platform 1.6) -->
-                  <platform>14</platform>
-                  <path>/Users/jamie/dev/android-sdk-macosx/</path>
+                  <platform>17</platform>
+                  <path>/home/fedora/bitmoney-demo/android-sdk-linux</path>
                  </sdk>
                  <emulator>
                     <avd>nexus4</avd>
