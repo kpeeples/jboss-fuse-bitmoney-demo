@@ -10,9 +10,9 @@ Built-By: jamie
 Tool: Bnd-0.0.357
 Bundle-Name: BitmoneyService
 Created-By: Apache Maven Bundle Plugin
-Build-Jdk: 1.6.0_51
+Build-Jdk: 1.6.0_22
 Bundle-Version: 0.0.1.SNAPSHOT
-Bnd-LastModified: 1374066725262
+Bnd-LastModified: 1374295365273
 Embed-Transitive: true
 Bundle-ManifestVersion: 2
 Import-Package: javax.annotation,javax.sql,javax.xml.parsers,org.apach
