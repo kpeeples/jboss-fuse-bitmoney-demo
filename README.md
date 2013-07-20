@@ -78,7 +78,7 @@ Location: http://rgladwell.github.com/m2e-android/updates/
 1.  Open a Terminal
 2.  cd bitmoney-demo
 3.  If git is not installed type sudo yum install git and install
-3.  type git clone http://github.com/kpeeples/jboss-fuse-bitmoney-demo
+4.  type git clone http://github.com/kpeeples/jboss-fuse-bitmoney-demo
 
 
 **Import project**
@@ -93,8 +93,30 @@ Location: http://rgladwell.github.com/m2e-android/updates/
 9.  Click Finish on the install
 10.  Clock OK on the warning
 11.  Click OK to restart
+12.  
+
+**Project Setup**
+*Fix SDK location issues
+1.  Open a terminal
+2.  cd bitmoney/android-sdk-linux/platform-tools
+3.  run ln -s ../build-tools/17.0.0/aapt aapt
+4.  run ln -s ../build-tools/17.0.0/lib/dx.jar dx.jar
+5.  cd ~/bitmoney-demo/jboss-fuse-bitmoney-demo
+6.  mvn android:generate-sources
+7.  Inside of the Fuse IDE
+8.  Right click on the bitmoney project and select properties
+9.  Select android 
+10.  Check Android 4.2.2
+11.  Click OK
+12.  Right Click on bitmoney
+13.  Select Maven-->Update Project
+14.  select bitmoney
+15.  Click OK
 
 
+## Running the android application
+1.  Right click on bitmoney
+2.  Select Run As --> Android Application
 
 ## Installation of Jboss Fuse
 1.  create four directories apac, na, emea, ltma
@@ -195,3 +217,4 @@ https://dl-ssl.google.com/android/eclipse/
 # Android Configuration
 1.  Start an android emulator, or plug in a device
 2.  run the following command mvn clean android:deploy
+
