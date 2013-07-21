@@ -155,7 +155,18 @@ cd ..
  unzip /home/fedora/Downloads/jboss-fuse-full-6.0.0.redhat-024.zip 
   cd ../ltam/
 unzip /home/fedora/Downloads/jboss-fuse-full-6.0.0.redhat-024.zip 
-
+cd ../na/jboss-fuse-6.0.0.redhat-024/etc
+edit jre.properties
+make the modifications described in "Modify jre.properties"
+edit  org.apache.karaf.management.cfg 
+change rmiRegistryPort to 1093
+change rmieServerPort to 44443
+edit system.properties
+change org.osgi.service.http.port to 8183
+change activemq.port activemq.port to 61613
+change activemq.jmx.url = 1093
+edit jetty.xml
+change jetty.port to 8183
 
 
 
@@ -164,45 +175,26 @@ unzip /home/fedora/Downloads/jboss-fuse-full-6.0.0.redhat-024.zip
 https://access.redhat.com/site/documentation/en-US/JBoss_Fuse/6.0/html-single/Configuring_and_Running_JBoss_Fuse/index.html#AMQAdminServiceGenTbl010
 
 **Modify jre.properties**
-Add:
+Add to the beginning of the jre-1.6 section:
 javax.ejb, \
-
  javax.jmdns, \
-
  javax.swing, \
-
  javax.validation, \
-
  javax.validation.constraints, \
-
  javax.validation.groups, \
-
  javax.validation.metadata, \
-
  javax.persistence.spi;version="1.0.1.Final", \
-
   javax.persistence;version="1.0.1.Final";-split-package:=merge-first, \
-
   javax.security.*;-split-package:=merge-first, \
-
   javax.persistence.criteria;version="1.0.1.Final";-split-package:=merge-last, \
-
   javax.persistence.metamodel;version="1.0.1.Final";-split-package:=merge-last, \
-
   javax.security.jacc, \
-
  javax.activation;version="1.1", \
-
  javax.activity, \
-
  javax.annotation;version="1.1", \
-
  javax.annotation.processing;version="1.1", \
-
  javax.ejb;version="3.0", \
-
  javax.ejb.spi;version="3.0", \
-
  javax.interceptor;version="3.0", \
 
 
