@@ -125,24 +125,6 @@ mvn initialize org.apache.felix:maven-bundle-plugin:bundle install -Papac
 1.  Right click on bitmoney
 2.  Select Run As --> Android Application
 
-## Installation of Jboss Fuse
-1.  create four directories apac, na, emea, ltma
-2.  unzip a copy of jboss fuse in each directory
-3.  start each instance by running bin/fuse
-4.  Install dbcp bundle (osgi:install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-dbcp/1.4_3)
-5.  Quit fuse by hitting ^d or running osgi:shutdown
-6.  copy mysql-connector-java-5.1.13-bin.jar to the deploy directory
-7.  Modify etc/jre.properties with information below for the appropriate JRE.  java -version will give you this
-8.  Modify org.apache.karaf.features.cfg and edit the featuresBoot line
- featuresBoot=jasypt-encryption,config,management,fabric-boot-commands,fabric-bundle,fabric-maven-proxy,patch,activemq,mq-fabric,camel-xmlbeans,camel,camel-cxf,camel-jms,activemq-xbeans,activemq-camel,camel-blueprint,camel-csv,camel-ftp,camel-bindy,camel-jdbc,camel-exec,camel-jasypt,camel-saxon,camel-snmp,camel-ognl,camel-routebox,camel-script,camel-spring-javaconfig,camel-jaxb,camel-jetty,camel-jmx,camel-mail,camel-paxlogging,camel-rmi,camel-sql,war,camel-xmlbeans,camel-xmljson,camel-xmlsecurity
-9.  Repeat these steps for each instance.  Make sure to modify the ports in each instance to match the ports in the region file in token/filters/<region>
-10.  mvn -P<env> initialize org.apache.felix:maven-bundle-plugin:bundle install 
-ex. mvn -Pltam clean org.apache.felix:maven-bundle-plugin:bundle install 
-11.  Modify datasource.xml to match the username and password for your mysql instance
-12.  run the bitmoney.sql file to create a default database
-13.  install your fab bundle:  install -s fab:file:/home/jamie/BitmoneyService-apac-0.0.1-SNAPSHOT.jar
-  
-
 Fuse Step by Step
  mkdir fuse
  cd fuse/
@@ -166,12 +148,11 @@ download the mysql connector (http://dev.mysql.com/get/Downloads/Connector-J/mys
 download http://repo1.maven.org/maven2/org/apache/servicemix/bundles/org.apache.servicemix.bundles.commons-dbcp/1.4_3/org.apache.servicemix.bundles.commons-dbcp-1.4_3.jar
 cd ~/Downloads/
 unzip mysql-connector-java-5.1.25.zip
-unzip commons-dbcp-1.4-bin.zip
-cd commons-dbcp-1.4/
 mvn install:install-file -Dfile=org.apache.servicemix.bundles.commons-dbcp-1.4_3.jar -DgroupId=org.apache.servicemix.bundles -DartifactId=org.apache.servicemix.bundles.commons-dbcp -Dversion=1.4_3 -Dpackaging=jar -DlocalRepositoryParth=~/.m2/repository
 
 
 * Installation steps for each instance
+Note there will be an error for mqtt-client 1.5 when installing BitcoinService, this will not happen when server is started.  Ignore the error during install
 * NA Install
 cd ~/bitmoney-demo/fuse/na/jboss-fuse-6.0.0.redhat-024/deploy/
 cp ~/Downloads/mysql-connector-java-5.1.25/mysql-connector-java-5.1.25-bin.jar .
@@ -204,10 +185,9 @@ wrapper install -n na -d na-service -D na-service
 * End Optional *
 
 install dbcp (osgi:install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-dbcp/1.4_3)
-install the BitmoneyService (install -s fab:file:/home/jamie/BitmoneyService-na-0.0.1-SNAPSHOT.jar)
-
-
+install the BitmoneyService (install -s fab:file:/home/fedora/bitmoney-demo/jboss-fuse-bitmoney-demo/BitmoneyService/target/BitmoneyService-na-0.0.1-SNAPSHOT.jar)
 type exit 
+
 * Apac install
 cd ~/bitmoney-demo/fuse/apac/jboss-fuse-6.0.0.redhat-024/deploy/
 cp ~/Downloads/mysql-connector-java-5.1.25/mysql-connector-java-5.1.25-bin.jar .
@@ -232,8 +212,8 @@ type features:install wrapper
 wrapper install -n apac -d apac-service -D apac-service
 * Optional *
   To install the service:
-    $ ln -s /home/fedora/bitmoney-demo/fuse/na/jboss-fuse-6.0.0.redhat-024/bin/apac-service /etc/init.d/
-    $ chkconfig na-service --add
+    $ ln -s /home/fedora/bitmoney-demo/fuse/apac/jboss-fuse-6.0.0.redhat-024/bin/apac-service /etc/init.d/
+    $ chkconfig apac-service --add
 
   To start the service when the machine is rebooted:
     $ chkconfig apac-service on
@@ -243,7 +223,7 @@ wrapper install -n apac -d apac-service -D apac-service
 cd ../bin
 start the fuse application ./fuse
 install dbcp (osgi:install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-dbcp/1.4_3)
-install the BitmoneyService (install -s fab:file:/home/jamie/BitmoneyService-apac-0.0.1-SNAPSHOT.jar)
+install the BitmoneyService (install -s fab:file:/home/fedora/bitmoney-demo/jboss-fuse-bitmoney-demo/BitmoneyService/target/BitmoneyService-apac-0.0.1-SNAPSHOT.jar)
 type exit 
 
 * EMEA install
@@ -264,17 +244,17 @@ change jetty.port to 8185
 cd ../bin
 start the fuse application ./fuse
 install dbcp (osgi:install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-dbcp/1.4_3)
-install the BitmoneyService (install -s fab:file:/home/jamie/BitmoneyService-emea-0.0.1-SNAPSHOT.jar)
+install the BitmoneyService (install -s fab:file:/home/fedora/bitmoney-demo/jboss-fuse-bitmoney-demo/BitmoneyService/target/BitmoneyService-emea-0.0.1-SNAPSHOT.jar)
 org.apache.karaf.features.cfg and edit the featuresBoot line
  featuresBoot=jasypt-encryption,config,management,fabric-boot-commands,fabric-bundle,fabric-maven-proxy,patch,activemq,mq-fabric,camel-xmlbeans,camel,camel-cxf,camel-jms,activemq-xbeans,activemq-camel,camel-blueprint,camel-csv,camel-ftp,camel-bindy,camel-jdbc,camel-exec,camel-jasypt,camel-saxon,camel-snmp,camel-ognl,camel-routebox,camel-script,camel-spring-javaconfig,camel-jaxb,camel-jetty,camel-jmx,camel-mail,camel-paxlogging,camel-rmi,camel-sql,war,camel-xmlbeans,camel-xmljson,camel-xmlsecurity
 
 cd ../bin
 start the fuse application ./fuse
 type features:install wrapper
-wrapper install -n na -d na-service -D emea-service
+wrapper install -n emea -d emea-service -D emea-service
 * Optional *
   To install the service:
-    $ ln -s /home/fedora/bitmoney-demo/fuse/na/jboss-fuse-6.0.0.redhat-024/bin/emea-service /etc/init.d/
+    $ ln -s /home/fedora/bitmoney-demo/fuse/emea/jboss-fuse-6.0.0.redhat-024/bin/emea-service /etc/init.d/
     $ chkconfig emea-service --add
 
   To start the service when the machine is rebooted:
@@ -300,7 +280,7 @@ change jetty.port to 8184
 cd ../bin
 start the fuse application ./fuse
 install dbcp (osgi:install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-dbcp/1.4_3)
-install the BitmoneyService (install -s fab:file:/home/jamie/BitmoneyService-ltam-0.0.1-SNAPSHOT.jar)
+install the BitmoneyService (install -s fab:file:/home/fedora/bitmoney-demo/jboss-fuse-bitmoney-demo/BitmoneyService/target/BitmoneyService-ltam-0.0.1-SNAPSHOT.jar)
 org.apache.karaf.features.cfg and edit the featuresBoot line
  featuresBoot=jasypt-encryption,config,management,fabric-boot-commands,fabric-bundle,fabric-maven-proxy,patch,activemq,mq-fabric,camel-xmlbeans,camel,camel-cxf,camel-jms,activemq-xbeans,activemq-camel,camel-blueprint,camel-csv,camel-ftp,camel-bindy,camel-jdbc,camel-exec,camel-jasypt,camel-saxon,camel-snmp,camel-ognl,camel-routebox,camel-script,camel-spring-javaconfig,camel-jaxb,camel-jetty,camel-jmx,camel-mail,camel-paxlogging,camel-rmi,camel-sql,war,camel-xmlbeans,camel-xmljson,camel-xmlsecurity
 
@@ -318,9 +298,6 @@ wrapper install -n ltam -d ltam-service -D ltam-service
 * End Optional *
 type exit 
 
-
-**Setting up each instance as a service**
-https://access.redhat.com/site/documentation/en-US/JBoss_Fuse/6.0/html-single/Configuring_and_Running_JBoss_Fuse/index.html#AMQAdminServiceGenTbl010
 
 **Modify jre.properties**
 Add to the beginning of the jre-1.6 section:
@@ -345,38 +322,18 @@ javax.ejb, \
  javax.ejb.spi;version="3.0", \
  javax.interceptor;version="3.0", \
 
+**Database Setup**
+If MySQL is not installed
+1.  sudo yum install mysql
+2.  sudo yum install mysql-server
+3.  sudo systemctl start mysqld.service
+4.  sudo enable mysqld.service
+5.  cd /home/fedora/bitmoney-demo/jboss-fuse-bitmoney-demo/BitmoneyService/sql
+6.  mysql -u root < bitmoney.sql
 
-**configure multiple instances of fuse.**
-1. edit org.apache.karaf.management.cfg 
-
-2.  Assign new rmiRegistryPort and rmiServerPort
-
-3.  edit system.properties change org.osgi.service.http.port and activemq.port
-
-4.  edit jetty.xml
-
-
-**Install Eclipse Pluging**
-1. Start Eclipse, then select Help > Install New Software.
-2. Click Add, in the top-right corner.
-3. In the Add Repository dialog that appears, enter "ADT Plugin" for the Name and the following URL for the Location:
-https://dl-ssl.google.com/android/eclipse/
-4. Click OK.
-5. If you have trouble acquiring the plugin, try using "http" in the Location URL, instead of "https" (https is preferred for security reasons).
-6. In the Available Software dialog, select the checkbox next to Developer Tools and click Next.
-7. In the next window, you'll see a list of the tools to be downloaded. Click Next.
-8. Read and accept the license agreements, then click Finish.
-9. If you get a security warning saying that the authenticity or validity of the software can't be established, click OK.
-10. When the installation completes, restart Eclipse.
-11. Configure the ADT Plugin
-12. Once Eclipse restarts, you must specify the location of your Android SDK directory:
-13. In the "Welcome to Android Development" window that appears, select Use existing SDKs.
-14. Browse and select the location of the Android SDK directory you recently downloaded and unpacked.
-15. Click Next.
-
-
-
-# Android Configuration
-1.  Start an android emulator, or plug in a device
-2.  run the following command mvn clean android:deploy
-
+**Start/Stop Bitcoin Services**
+1. cd /home/fedora/bitmoney-demo/jboss-fuse-bitmoney-demo/BitmoneyService
+start services
+bash startService.sh
+stop service
+bash stopService.sh
